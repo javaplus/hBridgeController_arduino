@@ -1,3 +1,18 @@
+/**
+ * 
+ * Expects a serial input of the format PWM #, plus Speeed value ended with a 'E' for an end marker.
+ * 
+ * Valide PWM values are 5 or 6.
+ * Valid Speeds are 0 (stop) to 255 (full power)
+ * 
+ * Example:
+ * 
+ * "6100E" - would send the speed of 100 to PWM output pin 6
+ * "60E" - would send a 0 speed(stop) to output pin 6.
+ * 
+ * 
+ */
+
 int RPWM = 5;
 int LPWM = 6;
 int L_EN = 7;
@@ -39,9 +54,9 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   recvWithEndMarker();
-  //Serial.println(speed);
-  //Serial.print("PWM"); 
-  //Serial.println(CurrentPWMChannel);
+  Serial.println(speed);
+  Serial.print("PWM"); 
+  Serial.println(CurrentPWMChannel);
   //flash(speed);
   last_speed = goForward(CurrentPWMChannel, speed, last_speed);
 
@@ -53,7 +68,7 @@ void loop() {
 
 
 void recvWithEndMarker() {
-  static byte ndx = 0;
+  int ndx = 0;
   char endMarker = 'E';
   char rc;
 
@@ -62,23 +77,29 @@ void recvWithEndMarker() {
     rc = Serial.read();
 
     if (rc != endMarker) {
-      //Serial.println("Not an end marker");
-      //Serial.print("ndx=");
-      //Serial.println(ndx);
+      Serial.println("Not an end marker");
+      Serial.print("ndx=");
+      Serial.println(ndx);
+      Serial.print("rc=");
+      Serial.println(rc);
       inputBuffer[ndx] = rc;
       ndx++;
       if (ndx >= numChars) {
-        //Serial.println("Hit max chars!!!!!!!!!!!!!!!!!!!");
+        Serial.println("Hit max chars!!!!!!!!!!!!!!!!!!!");
         ndx = numChars - 1;
       }
     }
     else {
-      //Serial.println("Hit END Marker");
+      Serial.println("Hit END Marker");
       inputBuffer[ndx] = '\0'; // terminate the string
       ndx = 0;
       //newData = true;
       CurrentPWMChannel = inputBuffer[0] - '0';
+      Serial.print("nowPWM");
+      Serial.println(CurrentPWMChannel);
       speed = atoi(&inputBuffer[1]);
+      Serial.print("nowSpeed");
+      Serial.println(speed);
     }
   }
 }
