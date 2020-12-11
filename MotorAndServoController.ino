@@ -11,8 +11,8 @@ unsigned long lastMoveUpTime = 0;
 unsigned long timeToWaitUp = 1500;
 unsigned long timeToWaitDown = 4500;
 
-int fullUpServoPosition = 0;
-int fullDownServoPosition = 180;
+int fullUpServoPosition = 170;
+int fullDownServoPosition = 40;
 boolean isSpinning = false;
 boolean isUp = false;
 boolean isDown = false;
